@@ -1,16 +1,16 @@
 import './style.scss'
-import Count from '../Count/Count'
+// import Count from '../Count/Count'
 import ButtonDelete from '../ButtonDelete/ButtonDelete';
 
-const Product = () => {
+const Product = ({ product }) => {
     return ( 
         <section className="product">
-            <div className="product__img"><img src="./img/products/macbook.jpg" alt="Apple MacBook Air 13" /></div>
-            <div className="product__title">Apple MacBook Air 13</div>
+            <div className="product__img"><img src={`./img/products/${product.img}`} alt={product.title} /></div>
+            <div className="product__title">{product.title}</div>
             <div className="product__count">
-                <Count />
+                {/* <Count /> */}
             </div>
-            <div className="product__price">$110,000</div>
+            <div className="product__price">${product.price}</div>
             <div className="product__controls">
                 <ButtonDelete />
             </div>
