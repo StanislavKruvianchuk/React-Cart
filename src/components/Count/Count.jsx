@@ -1,5 +1,6 @@
 import './style.scss'
 
+
 const Count = ({ count, increase, id, decrease, changeValue }) => {
     return ( 
         <div className="count">
