@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CartFooter from '../CartFooter/CartFooter';
 import CartHeader from '../CartHeader/CartHeader';
 import Product from '../Product/Product';
@@ -6,6 +6,17 @@ import data from "./../../data"
 
 const Cart = () => {
     const [cart, setCart] = useState(data);
+    const [total, setTotal] = useState({
+        price: cart.reduce((prev, curr) => { return prev + curr.priceTotal }, 0),
+        count: cart.reduce((prev, curr) => { return prev + curr.count }, 0)
+    })
+
+    useEffect(() => {
+        setTotal({
+            price: cart.reduce((prev, curr) => { return prev + curr.priceTotal }, 0),
+            count: cart.reduce((prev, curr) => { return prev + curr.count }, 0)
+        })
+    }, [cart])
 
     const deleteProduct = (id) => {
         console.log('Delete', id);
@@ -33,8 +44,23 @@ const Cart = () => {
                 if (product.id === id) {
                     return {
                         ...product,
-                        count: product.count -1 > 1 ? --product.count : 1,
-                        priceTotal: product.count * product.price
+                        count: product.count - 1 > 1 ? product.count - 1 : 1,
+                        priceTotal: (product.count -1 > 1 ? --product.count : 1) * product.price
+                    }
+                }
+                return product
+            })
+        })
+    }
+
+    const changeValue = (id, value) => {
+        setCart((cart) => {
+            return cart.map((product) => {
+                if (product.id === id) {
+                    return {
+                        ...product,
+                        count: value,
+                        priceTotal: value * product.price
                     }
                 }
                 return product
@@ -43,7 +69,16 @@ const Cart = () => {
     }
 
     const products = cart.map((product) => {
-        return <Product product={product} key={product.id} deleteProduct={deleteProduct} increase={increase} decrease={decrease}/>
+        return (
+            <Product 
+                product={product} 
+                key={product.id} 
+                deleteProduct={deleteProduct} 
+                increase={increase} 
+                decrease={decrease}
+                changeValue={changeValue}
+            />
+        ) 
     })
 
     console.log(cart)
@@ -54,7 +89,7 @@ const Cart = () => {
 
             {products}
 
-            <CartFooter />
+            <CartFooter total={total}/>
             
         </section>
      );
